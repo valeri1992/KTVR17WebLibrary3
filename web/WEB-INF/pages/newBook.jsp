@@ -15,6 +15,7 @@
         <title>Новая книга</title>
     </head>
     <body class="colorBack">
+         <a href="welcome">Главная страница</a>
       <div class="colorBack">
 
         <h1>Добавляем в библиотеку новую книгу</h1>

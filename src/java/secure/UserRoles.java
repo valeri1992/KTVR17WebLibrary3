@@ -30,8 +30,8 @@ public class UserRoles {
     public UserRoles() {
     }
 
-    public UserRoles(User reader, Role role) {
-        this.user = reader;
+    public UserRoles(User user, Role role) {
+        this.user = user;
         this.role = role;
     }
 

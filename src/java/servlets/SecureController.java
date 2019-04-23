@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package secure;
+package servlets;
 
 import entity.User;
 import java.io.IOException;
@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import secure.Role;
+import secure.SecureLogic;
+import secure.UserRoles;
 import session.UserFacade;
 import session.RoleFacade;
 import session.UserRolesFacade;
@@ -27,14 +30,15 @@ import util.PageReturner;
  *
  * @author Melnikov
  */
-@WebServlet(loadOnStartup = 1,name = "Secure", urlPatterns = {
+@WebServlet(loadOnStartup = 1,name = "SecureController", urlPatterns = {
     "/login",
     "/logout",
     "/showLogin",
-    "/showUserRoles",
-    "/changeUserRole"
+    "/welcome",
+    "/newUser",
+    "/addUser",
 })
-public class Secure extends HttpServlet {
+public class SecureController extends HttpServlet {
    
     @EJB RoleFacade roleFacade;
     @EJB UserFacade userFacade;
@@ -42,8 +46,8 @@ public class Secure extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        List<User> listReader = userFacade.findAll();
-        if(listReader.isEmpty()){
+        List<User> ListUser = userFacade.findAll();
+        if(ListUser.isEmpty()){
             EncriptPass ep = new EncriptPass();
             String salts = ep.createSalts();
             String encriptPass = ep.setEncriptPass("admin", salts);
@@ -88,12 +92,17 @@ public class Secure extends HttpServlet {
             } catch (Exception e) {
                 regUser = null;
             }
-        }
-            
+        } 
+        String salt="";
+        EncriptPass ep = new EncriptPass();    
         SecureLogic sl = new SecureLogic();
         String path = request.getServletPath();
         if(null != path)
             switch (path) {
+                    case "/welcome":
+                 request.getRequestDispatcher(PageReturner.getPage("welcome"))
+                    .forward(request, response);
+                 break;
         case "/login":
             String login = request.getParameter("login");
             String password = request.getParameter("password");
@@ -104,7 +113,7 @@ public class Secure extends HttpServlet {
                     .forward(request, response);
                 break;
             }
-            EncriptPass ep = new EncriptPass();
+          
             String salts = regUser.getSalts();
             String encriptPass = ep.setEncriptPass(password, salts);
             if(encriptPass.equals(regUser.getPassword())){
@@ -162,9 +171,9 @@ public class Secure extends HttpServlet {
             String deleteButton = request.getParameter("deleteButton");
             String userId = request.getParameter("user");
             String roleId = request.getParameter("role");
-            User reader = userFacade.find(new Long(userId));
+            User user = userFacade.find(new Long(userId));
             Role roleToUser = roleFacade.find(new Long(roleId));
-            UserRoles ur = new UserRoles(reader, roleToUser);
+            UserRoles ur = new UserRoles(user, roleToUser);
             if(setButton != null){
                 sl.addRoleToUser(ur);
             }
@@ -183,8 +192,36 @@ public class Secure extends HttpServlet {
             request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
                     .forward(request, response);
             break;
+            case "/newUser":
+            request.getRequestDispatcher(PageReturner.getPage("newUser")).forward(request, response);
+            break;
+        case "/addUser":
+            String name = request.getParameter("name");
+            String surname = request.getParameter("surname");
+            String phone = request.getParameter("phone");
+            String city = request.getParameter("city");
+            login = request.getParameter("login");
+            String password1 = request.getParameter("password1");
+            String password2 = request.getParameter("password2");
+            if(!password1.equals(password2)){
+              request.setAttribute("info", "Неправильно введен логин или пароль");  
+              request.getRequestDispatcher(PageReturner.getPage("welcome"))
+                      .forward(request, response);
+              break;
             }
-    }
+            ep = new EncriptPass();
+            salts = ep.createSalts();
+            encriptPass = ep.setEncriptPass(password1, salts);
+            user = new User(name, surname, phone, city, login, 
+                    encriptPass,salts);
+            userFacade.create(user);
+            request.setAttribute("user", user);
+            request.getRequestDispatcher(PageReturner.getPage("welcome"))
+                    .forward(request, response);
+                break;
+            }
+            }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

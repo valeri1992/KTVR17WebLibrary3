@@ -13,10 +13,11 @@
         <title>Список читателей</title>
     </head>
     <body>
+        <a href="welcome">Главная страница</a>
         <h1>Список читателей</h1>
         <ul>
-            <c:forEach var="reader" items="${listReader}">
-                <li>${reader.name} ${reader.surname}</li>
+            <c:forEach var="user" items="${listUsers}">
+                <li>${user.name} ${user.surname}</li>
             </c:forEach>
         </ul>
     </body>

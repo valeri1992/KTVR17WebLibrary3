@@ -44,5 +44,6 @@
                 </tr>
             </table>
         </form>
+         <a href="welcome">Главная страница</a>
     </body>
 </html>

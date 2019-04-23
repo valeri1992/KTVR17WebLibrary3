@@ -13,6 +13,7 @@
         <title>Список книг</title>
     </head>
     <body>
+        <a href="welcome">Главная страница</a>
         <h1>Список книг:</h1>
         <ul>
             <c:forEach var="book" items="${listBooks}">

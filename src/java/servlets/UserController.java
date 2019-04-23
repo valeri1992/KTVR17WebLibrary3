@@ -17,8 +17,8 @@ import util.PageReturner;
  *
  * @author Melnikov
  */
-@WebServlet(name = "Servlet1", urlPatterns = {"/page1","/page2"})
-public class Servlet1 extends HttpServlet {
+@WebServlet(name = "UserController", urlPatterns = {"/page1","/page2"})
+public class UserController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
