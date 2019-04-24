@@ -1,11 +1,13 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package servlets;
 
-import entity.Book;
 import entity.User;
 import java.io.IOException;
-import java.util.List;
-import javax.ejb.EJB;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,15 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import secure.SecureLogic;
-import session.BookFacade;
 import util.PageReturner;
 
-@WebServlet(name = "UserController", urlPatterns = {
-    "/showBooks"
-
+/**
+ *
+ * @author pupil
+ */
+@WebServlet(name = "WelcomeController", urlPatterns = {
+    "/welcome",
 })
-public class UserController extends HttpServlet {
-@EJB BookFacade bookFacade;
+public class WelcomeController extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,8 +39,8 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-         HttpSession session = request.getSession(false);
-        SecureLogic sl = new SecureLogic();
+        HttpSession session = request.getSession(false);
+        SecureLogic sl= new SecureLogic();
         User regUser = null;
         if(session != null){
             try {
@@ -46,31 +50,32 @@ public class UserController extends HttpServlet {
             }
         }
          if(regUser == null){
-                request.setAttribute("info", "У вас нет прав доступа к ресурсу");
+                request.setAttribute("info", "Войдите или зарегистрируйтесь");
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))
                         .forward(request, response);
                return;
             } 
-        if(!sl.isRole(regUser, "ADMIN")){
-                request.setAttribute("info", "У вас нет прав доступа к ресурсу");
-                request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+        if(sl.isRole(regUser, "ADMIN")){
+                request.setAttribute("info", "Вы вошли как admin");
+                request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
                         .forward(request, response);
                return;
-            }     
-        
-      String path = request.getServletPath();
-                switch(path){
-                       
-        case "/showBooks":
-            List<Book> listBooks = bookFacade.findActived(true);
-            request.setAttribute("role", sl.getRole(regUser));
-            request.setAttribute("listBooks", listBooks);
-            request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
-            break;
-        default:
-            request.setAttribute("info", "Нет страницы");
-            request.getRequestDispatcher("/welcome").forward(request, response);
-            break;
+            
+        }
+        else if (sl.isRole(regUser, "ADMIN")){
+                request.setAttribute("info", "Вы должны войти для пользования библиотекой");
+                request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
+                        .forward(request, response);
+               return;
+            
+        }
+         
+        else {
+                request.setAttribute("info", "Вы вошли как User");
+                request.getRequestDispatcher(PageReturner.getPage("welcome"))
+                        .forward(request, response);
+               return;
+            
         }
     }
 

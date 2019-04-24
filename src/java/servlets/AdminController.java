@@ -38,7 +38,7 @@ import util.PageReturner;
 @WebServlet(name = "AdminController", urlPatterns = {
     "/newBook",
     "/addBook",
-    "/showBooks",
+   
     "/showUsers",
     "/showTakeBookToReader",
     "/takeBookToReader",
@@ -105,17 +105,10 @@ public class AdminController extends HttpServlet {
             Book book = new Book(nameBook, author, new Integer(yearPublished), isbn, new Integer(countStr));
             bookFacade.create(book);
             request.setAttribute("book", book);
-            request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
+            request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
             }
-        
-        case "/showBooks":{
-            List<Book> listBooks = bookFacade.findActived(true);
-            request.setAttribute("role", sl.getRole(regUser));
-            request.setAttribute("listBooks", listBooks);
-            request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
-                break;
-            }
+     
         case "/showUsers":
             List<User> listUsers = userFacade.findAll();
             request.setAttribute("listUsers", listUsers);
@@ -215,10 +208,9 @@ public class AdminController extends HttpServlet {
             request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
                     .forward(request, response);
             break;
-            
     
         default:
-            request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
+            request.getRequestDispatcher("/welcome").forward(request, response);
             break;
     }
     }
