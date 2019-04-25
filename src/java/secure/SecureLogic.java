@@ -35,13 +35,24 @@ public class SecureLogic {
     }
     
     public void addRoleToUser(UserRoles ur){
+      
+        this.deleteRoleToUser(ur.getUser());//ubiraem vsex polzovatelei
         if(ur.getRole().getName().equals("ADMIN")){
+            userRolesFacade.create(ur);
+            Role addNewRole = roleFacade.findRoleByName("MANAGER");
+            UserRoles addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
+            userRolesFacade.create(addedNewRoles);
+            addNewRole = roleFacade.findRoleByName("USER");
+            addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
+            userRolesFacade.create(addedNewRoles);
+            } if(ur.getRole().getName().equals("MANAGER")){
             userRolesFacade.create(ur);
             Role addNewRole = roleFacade.findRoleByName("USER");
             UserRoles addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
             userRolesFacade.create(addedNewRoles);
         }else if(ur.getRole().getName().equals("USER")){
             userRolesFacade.create(ur);
+       
         }
         
     }
@@ -71,6 +82,11 @@ public class SecureLogic {
         int n = listUserRoles.size();
         for(int i = 0; i<n; i++){
             if("ADMIN".equals(listUserRoles.get(i).getRole().getName())){
+                return listUserRoles.get(i).getRole().getName();
+            }
+        }
+         for(int i = 0; i<n; i++){
+            if("MANAGER".equals(listUserRoles.get(i).getRole().getName())){
                 return listUserRoles.get(i).getRole().getName();
             }
         }

@@ -49,33 +49,33 @@ public class WelcomeController extends HttpServlet {
                 regUser = null;
             }
         }
-         if(regUser == null){
-                request.setAttribute("info", "Войдите или зарегистрируйтесь");
-                request.getRequestDispatcher(PageReturner.getPage("showLogin"))
-                        .forward(request, response);
-               return;
-            } 
+        if(regUser == null){
+            request.setAttribute("info", "Войдите или зарегистрируйтесь");
+            request.getRequestDispatcher(PageReturner.getPage("index"))
+                    .forward(request, response);
+            return;
+        } 
         if(sl.isRole(regUser, "ADMIN")){
-                request.setAttribute("info", "Вы вошли как admin");
-                request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
-                        .forward(request, response);
-               return;
+            request.setAttribute("info", "Вы вошли как admin");
+            request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
+                .forward(request, response);
+            return;
+            }else if (sl.isRole(regUser, "MANAGER")){
+            request.setAttribute("info", "Вы вошли как user");
+            request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
+                  .forward(request, response);
+            return;
             
-        }
-        else if (sl.isRole(regUser, "ADMIN")){
-                request.setAttribute("info", "Вы должны войти для пользования библиотекой");
-                request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
-                        .forward(request, response);
-               return;
-            
-        }
-         
-        else {
-                request.setAttribute("info", "Вы вошли как User");
-                request.getRequestDispatcher(PageReturner.getPage("welcome"))
-                        .forward(request, response);
-               return;
-            
+        }else if (sl.isRole(regUser, "USER")){
+            request.setAttribute("info", "Вы вошли как user");
+            request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
+                  .forward(request, response);
+            return;
+        }else {
+            request.setAttribute("info", "Вы должны войти");
+            request.getRequestDispatcher(PageReturner.getPage("index"))
+                    .forward(request, response);
+            return;
         }
     }
 

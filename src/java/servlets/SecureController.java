@@ -60,6 +60,11 @@ public class SecureController extends HttpServlet {
             ur.setUser(user);
             ur.setRole(role);
             userRolesFacade.create(ur);
+            role.setName("MANAGER");
+            roleFacade.create(role);
+            ur.setUser(user);
+            ur.setRole(role);
+            userRolesFacade.create(ur);
             role.setName("USER");
             roleFacade.create(role);
             ur.setUser(user);
@@ -132,7 +137,7 @@ public class SecureController extends HttpServlet {
                     session.invalidate();
                     request.setAttribute("info", "Вы вышли из системы");
                 }
-                request.getRequestDispatcher("/welcome")
+                request.getRequestDispatcher(PageReturner.getPage("index"))
                         .forward(request, response);
                 break;
 
@@ -149,21 +154,26 @@ public class SecureController extends HttpServlet {
                 String password2 = request.getParameter("password2");
                 if(!password1.equals(password2)){
                   request.setAttribute("info", "Неправильно введен логин или пароль");  
-                  request.getRequestDispatcher("/welcome")
+                  request.getRequestDispatcher("/newUser")
                           .forward(request, response);
                   break;
                 }
-                ep = new EncriptPass();
+               
                 salts = ep.createSalts();
                 encriptPass = ep.setEncriptPass(password1, salts);
                 User user = new User(name, surname, phone, city, login, 
                         encriptPass,salts);
                 userFacade.create(user);
+                Role role = roleFacade.findRoleByName("USER");
+                UserRoles ur = new UserRoles(user,role);
                 request.setAttribute("user", user);
+                userRolesFacade.create(ur);
+                session = request.getSession(true);
+                session.setAttribute("regUser", user);
                 request.getRequestDispatcher("/welcome")
                         .forward(request, response);
                     break;
-                     default:
+            default:
                 request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
             }

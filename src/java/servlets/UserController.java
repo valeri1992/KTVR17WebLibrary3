@@ -65,11 +65,11 @@ public class UserController extends HttpServlet {
             List<Book> listBooks = bookFacade.findActived(true);
             request.setAttribute("role", sl.getRole(regUser));
             request.setAttribute("listBooks", listBooks);
-            request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
+            request.getRequestDispatcher(PageReturner.getPage("listBooks")).forward(request, response);
             break;
         default:
             request.setAttribute("info", "Нет страницы");
-            request.getRequestDispatcher("/welcome").forward(request, response);
+            request.getRequestDispatcher (PageReturner.getPage("index")).forward(request, response);
             break;
         }
     }

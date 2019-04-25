@@ -6,14 +6,14 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>welcome.jsp</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     <jsp-config>
         <jsp-property-group>
             <display-name>template1</display-name>
             <url-pattern>/welcomeUser.jsp</url-pattern>
             <url-pattern>/showLogin.jsp</url-pattern>
-            <url-pattern>/welcome.jsp</url-pattern>
+            <url-pattern>/index.jsp</url-pattern>
             <url-pattern>/welcomeAdmin.jsp</url-pattern>
             <page-encoding>UTF-8</page-encoding>
             <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
