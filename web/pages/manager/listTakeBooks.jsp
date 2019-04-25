@@ -1,9 +1,3 @@
-<%-- 
-    Document   : takeBooks.jsp
-    Created on : Oct 5, 2018, 10:38:13 AM
-    Author     : Melnikov
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -13,7 +7,7 @@
         <title>Выданные книги</title>
     </head>
     <body>
-        <a href="welcome">Главная страница</a>
+          <a href="welcome">Главная страница</a>
         <h1>Список выданных книг</h1>
         ${info}
             <ul>

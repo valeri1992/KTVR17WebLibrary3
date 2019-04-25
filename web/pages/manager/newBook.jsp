@@ -1,8 +1,4 @@
-<%-- 
-    Document   : newBook
-    Created on : Sep 26, 2018, 10:50:01 AM
-    Author     : Melnikov
---%>
+
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -15,9 +11,8 @@
         <title>Новая книга</title>
     </head>
     <body class="colorBack">
-         <a href="welcome">Главная страница</a>
       <div class="colorBack">
-
+           <a href="welcome">Главная страница</a>
         <h1>Добавляем в библиотеку новую книгу</h1>
         <form action="addBook" method="POST" name="form1" onsubmit="return validate();" id="form1">
              Название:<br>

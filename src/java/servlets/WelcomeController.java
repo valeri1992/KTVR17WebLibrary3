@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servlets;
 
 import entity.User;
@@ -23,6 +18,7 @@ import util.PageReturner;
  */
 @WebServlet(name = "WelcomeController", urlPatterns = {
     "/welcome",
+
 })
 public class WelcomeController extends HttpServlet {
 
@@ -40,7 +36,7 @@ public class WelcomeController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession(false);
-        SecureLogic sl= new SecureLogic();
+        SecureLogic sl = new SecureLogic();
         User regUser = null;
         if(session != null){
             try {
@@ -54,25 +50,24 @@ public class WelcomeController extends HttpServlet {
             request.getRequestDispatcher(PageReturner.getPage("index"))
                     .forward(request, response);
             return;
-        } 
+        }
         if(sl.isRole(regUser, "ADMIN")){
             request.setAttribute("info", "Вы вошли как admin");
             request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
-                .forward(request, response);
+                    .forward(request, response);
             return;
-            }else if (sl.isRole(regUser, "MANAGER")){
+        }else if(sl.isRole(regUser, "MANAGER")){
+            request.setAttribute("info", "Вы вошли как manager");
+            request.getRequestDispatcher(PageReturner.getPage("welcomeManager"))
+                    .forward(request, response);
+            return;
+        }else if(sl.isRole(regUser, "USER")){
             request.setAttribute("info", "Вы вошли как user");
             request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
-                  .forward(request, response);
+                    .forward(request, response);
             return;
-            
-        }else if (sl.isRole(regUser, "USER")){
-            request.setAttribute("info", "Вы вошли как user");
-            request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
-                  .forward(request, response);
-            return;
-        }else {
-            request.setAttribute("info", "Вы должны войти");
+        }else{
+            request.setAttribute("info", "Вы должны войти для пользования библиотекой");
             request.getRequestDispatcher(PageReturner.getPage("index"))
                     .forward(request, response);
             return;

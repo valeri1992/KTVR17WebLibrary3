@@ -1,4 +1,3 @@
-
 package servlets;
 
 import entity.Book;
@@ -17,11 +16,11 @@ import session.BookFacade;
 import util.PageReturner;
 
 @WebServlet(name = "UserController", urlPatterns = {
-    "/showBooks"
+    "/showBooks",
 
 })
 public class UserController extends HttpServlet {
-@EJB BookFacade bookFacade;
+    @EJB BookFacade bookFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,7 +34,8 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-         HttpSession session = request.getSession(false);
+        
+        HttpSession session = request.getSession(false);
         SecureLogic sl = new SecureLogic();
         User regUser = null;
         if(session != null){
@@ -45,32 +45,31 @@ public class UserController extends HttpServlet {
                 regUser = null;
             }
         }
-         if(regUser == null){
-                request.setAttribute("info", "У вас нет прав доступа к ресурсу");
-                request.getRequestDispatcher(PageReturner.getPage("showLogin"))
-                        .forward(request, response);
-               return;
-            } 
-        if(!sl.isRole(regUser, "ADMIN")){
-                request.setAttribute("info", "У вас нет прав доступа к ресурсу");
-                request.getRequestDispatcher(PageReturner.getPage("showLogin"))
-                        .forward(request, response);
-               return;
-            }     
+        if(regUser == null){
+            request.setAttribute("info", "У вас нет прав доступа к ресурсу");
+            request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+                    .forward(request, response);
+            return;
+        }
+        if(!sl.isRole(regUser, "USER")){
+            request.setAttribute("info", "У вас нет прав доступа к ресурсу");
+            request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+                    .forward(request, response);
+            return;
+        } 
         
-      String path = request.getServletPath();
-                switch(path){
-                       
-        case "/showBooks":
-            List<Book> listBooks = bookFacade.findActived(true);
-            request.setAttribute("role", sl.getRole(regUser));
-            request.setAttribute("listBooks", listBooks);
-            request.getRequestDispatcher(PageReturner.getPage("listBooks")).forward(request, response);
-            break;
-        default:
-            request.setAttribute("info", "Нет страницы");
-            request.getRequestDispatcher (PageReturner.getPage("index")).forward(request, response);
-            break;
+        String path = request.getServletPath();
+        switch (path) {
+            case "/showBooks":
+                List<Book> listBooks = bookFacade.findActived(true);
+                request.setAttribute("role", sl.getRole(regUser));
+                request.setAttribute("listBooks", listBooks);
+                request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
+                break;
+            default:
+                request.setAttribute("info", "Нет такой стpаницы!");
+                request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
+                break;
         }
     }
 

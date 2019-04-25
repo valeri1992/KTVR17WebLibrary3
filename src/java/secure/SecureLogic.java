@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package secure;
 
 import entity.User;
@@ -35,8 +30,7 @@ public class SecureLogic {
     }
     
     public void addRoleToUser(UserRoles ur){
-      
-        this.deleteRoleToUser(ur.getUser());//ubiraem vsex polzovatelei
+        this.deleteRoleToUser(ur.getUser());
         if(ur.getRole().getName().equals("ADMIN")){
             userRolesFacade.create(ur);
             Role addNewRole = roleFacade.findRoleByName("MANAGER");
@@ -45,14 +39,13 @@ public class SecureLogic {
             addNewRole = roleFacade.findRoleByName("USER");
             addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
             userRolesFacade.create(addedNewRoles);
-            } if(ur.getRole().getName().equals("MANAGER")){
+        }if(ur.getRole().getName().equals("MANAGER")){
             userRolesFacade.create(ur);
             Role addNewRole = roleFacade.findRoleByName("USER");
             UserRoles addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
             userRolesFacade.create(addedNewRoles);
         }else if(ur.getRole().getName().equals("USER")){
             userRolesFacade.create(ur);
-       
         }
         
     }
@@ -85,7 +78,7 @@ public class SecureLogic {
                 return listUserRoles.get(i).getRole().getName();
             }
         }
-         for(int i = 0; i<n; i++){
+        for(int i = 0; i<n; i++){
             if("MANAGER".equals(listUserRoles.get(i).getRole().getName())){
                 return listUserRoles.get(i).getRole().getName();
             }

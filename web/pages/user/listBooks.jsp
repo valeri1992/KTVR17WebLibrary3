@@ -1,8 +1,4 @@
-<%-- 
-    Document   : listBooks
-    Created on : Oct 3, 2018, 10:46:46 AM
-    Author     : Melnikov
---%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servlets;
 
 import entity.User;
@@ -36,6 +31,7 @@ import util.PageReturner;
     "/showLogin",
     "/newUser",
     "/addUser",
+    
 })
 public class SecureController extends HttpServlet {
    
@@ -45,8 +41,8 @@ public class SecureController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        List<User> ListUser = userFacade.findAll();
-        if(ListUser.isEmpty()){
+        List<User> listUsers = userFacade.findAll();
+        if(listUsers.isEmpty()){
             EncriptPass ep = new EncriptPass();
             String salts = ep.createSalts();
             String encriptPass = ep.setEncriptPass("admin", salts);
@@ -96,12 +92,12 @@ public class SecureController extends HttpServlet {
             } catch (Exception e) {
                 regUser = null;
             }
-        } 
-        String salt="";
-        EncriptPass ep = new EncriptPass();    
+        }
+        EncriptPass ep = new EncriptPass(); 
+        String salts="";
         SecureLogic sl = new SecureLogic();
         String path = request.getServletPath();
-       
+        
         switch (path) {
             case "/login":
                 String login = request.getParameter("login");
@@ -113,8 +109,7 @@ public class SecureController extends HttpServlet {
                         .forward(request, response);
                     break;
                 }
-
-                String salts = regUser.getSalts();
+                salts = regUser.getSalts();
                 String encriptPass = ep.setEncriptPass(password, salts);
                 if(encriptPass.equals(regUser.getPassword())){
                     session = request.getSession(true);
@@ -140,7 +135,6 @@ public class SecureController extends HttpServlet {
                 request.getRequestDispatcher(PageReturner.getPage("index"))
                         .forward(request, response);
                 break;
-
             case "/newUser":
                 request.getRequestDispatcher(PageReturner.getPage("newUser")).forward(request, response);
                 break;
@@ -153,32 +147,32 @@ public class SecureController extends HttpServlet {
                 String password1 = request.getParameter("password1");
                 String password2 = request.getParameter("password2");
                 if(!password1.equals(password2)){
-                  request.setAttribute("info", "Неправильно введен логин или пароль");  
-                  request.getRequestDispatcher("/newUser")
-                          .forward(request, response);
-                  break;
+                    request.setAttribute("info", "Неправильно введен логин или пароль");  
+                    request.getRequestDispatcher(PageReturner.getPage("newUser"))
+                            .forward(request, response);
+                    break;
                 }
-               
                 salts = ep.createSalts();
                 encriptPass = ep.setEncriptPass(password1, salts);
                 User user = new User(name, surname, phone, city, login, 
                         encriptPass,salts);
                 userFacade.create(user);
                 Role role = roleFacade.findRoleByName("USER");
-                UserRoles ur = new UserRoles(user,role);
-                request.setAttribute("user", user);
+                UserRoles ur = new UserRoles(user, role);
                 userRolesFacade.create(ur);
                 session = request.getSession(true);
                 session.setAttribute("regUser", user);
+                request.setAttribute("user", user);
                 request.getRequestDispatcher("/welcome")
                         .forward(request, response);
-                    break;
-            default:
-                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
-            }
+             default:
+                request.setAttribute("info", "Нет такой станицы!");
+                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                break;
+            
         }
-    
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

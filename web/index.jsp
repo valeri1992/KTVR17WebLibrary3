@@ -2,13 +2,11 @@
 <link rel="stylesheet" href="css/welcome.css">
 <div class="colorBack">
         <h1>Добро пожаловать в нашу библиотеку</h1>
-       <h3>
-          <p>${info}</p><br>
-        <a href="showLogin">Войти в систему</a><br>
-        или
-        <a href="newUser">Зарегистрируйтесь</a><br>
-      
+        <p>${info}</p>
+        <h3>
+            <a href="showLogin">Войдите</a> 
+            или 
+            <a href="newUser">Зарегистрируйтесь</a>
+        </h3>
         
-      
- </div>       
-   
+ </div>    

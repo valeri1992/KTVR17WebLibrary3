@@ -1,9 +1,3 @@
-<%-- 
-    Document   : editUserRoles
-    Created on : Nov 7, 2018, 12:35:23 PM
-    Author     : Melnikov
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -13,6 +7,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <a href="welcome">Главная страница</a>
         <h1>Назначение ролей!</h1>
         <form action="changeUserRole" method="POST">
             <table>
@@ -44,6 +39,5 @@
                 </tr>
             </table>
         </form>
-         <a href="welcome">Главная страница</a>
     </body>
 </html>

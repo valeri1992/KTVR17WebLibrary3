@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servlets;
 
 import entity.User;
@@ -31,10 +26,12 @@ import util.PageReturner;
  */
 @WebServlet(name = "AdminController", urlPatterns = {
     "/showUserRoles",
-    "/changeUserRole"})
+    "/changeUserRole",
+    
+})
 public class AdminController extends HttpServlet {
-@EJB UserFacade userFacade;
-@EJB RoleFacade roleFacade; 
+    @EJB UserFacade userFacade;
+    @EJB RoleFacade roleFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -58,66 +55,64 @@ public class AdminController extends HttpServlet {
                 regUser = null;
             }
         }
-         if(regUser == null){
-                request.setAttribute("info", "У вас нет прав доступа к ресурсу");
-                request.getRequestDispatcher(PageReturner.getPage("showLogin"))
-                        .forward(request, response);
-               return;
-            } 
+        if(regUser == null){
+            request.setAttribute("info", "У вас нет прав доступа к ресурсу");
+            request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+                    .forward(request, response);
+            return;
+        }
         if(!sl.isRole(regUser, "ADMIN")){
-                request.setAttribute("info", "У вас нет прав доступа к ресурсу");
-                request.getRequestDispatcher(PageReturner.getPage("showLogin"))
-                        .forward(request, response);
-               return;
-            }     
-        
+            request.setAttribute("info", "У вас нет прав доступа к ресурсу");
+            request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+                    .forward(request, response);
+            return;
+        } 
         String path = request.getServletPath();
-       
-            switch (path) {
-              case "/showUserRoles":
-            Map<User,String> mapUsers = new HashMap<>();
-            List <User> listUsers = userFacade.findAll();
-            int n = listUsers.size();
-            for(int i=0;i<n;i++){
-                mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-            }
-            List<Role> listRoles = roleFacade.findAll();
-            request.setAttribute("mapUsers", mapUsers);
-            request.setAttribute("listRoles", listRoles);
-            request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
-                    .forward(request, response);
-            break;
-        case "/changeUserRole":
-            String setButton = request.getParameter("setButton");
-            String deleteButton = request.getParameter("deleteButton");
-            String userId = request.getParameter("user");
-            String roleId = request.getParameter("role");
-            User user = userFacade.find(new Long(userId));
-            Role roleToUser = roleFacade.find(new Long(roleId));
-            UserRoles ur = new UserRoles(user, roleToUser);
-            if(setButton != null){
-                sl.addRoleToUser(ur);
-            }
-            if(deleteButton != null){
-                sl.deleteRoleToUser(ur.getUser());
-            }
-            mapUsers = new HashMap<>();
-            listUsers = userFacade.findAll();   
-            n = listUsers.size();
-            for(int i=0;i<n;i++){
-                mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-            }
-            request.setAttribute("mapUsers", mapUsers);
-            List<Role> newListRoles = roleFacade.findAll();
-            request.setAttribute("listRoles", newListRoles);
-            request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
-                    .forward(request, response);
-            break;
-    
-        default:
-            request.getRequestDispatcher("/welcome").forward(request, response);
-            break;  
-            }
+        switch (path) {
+            case "/showUserRoles":
+                Map<User,String> mapUsers = new HashMap<>();
+                List<User> listUsers = userFacade.findAll();
+                int n = listUsers.size();
+                for(int i=0;i<n;i++){
+                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                }
+                List<Role> listRoles = roleFacade.findAll();
+                request.setAttribute("mapUsers", mapUsers);
+                request.setAttribute("listRoles", listRoles);
+                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
+                        .forward(request, response);
+                break;
+            case "/changeUserRole":
+                String setButton = request.getParameter("setButton");
+                String deleteButton = request.getParameter("deleteButton");
+                String userId = request.getParameter("user");
+                String roleId = request.getParameter("role");
+                User user = userFacade.find(new Long(userId));
+                Role roleToUser = roleFacade.find(new Long(roleId));
+                UserRoles ur = new UserRoles(user, roleToUser);
+                if(setButton != null){
+                    sl.addRoleToUser(ur);
+                }
+                if(deleteButton != null){
+                    sl.deleteRoleToUser(ur.getUser());
+                }
+                mapUsers = new HashMap<>();
+                listUsers = userFacade.findAll();   
+                n = listUsers.size();
+                for(int i=0;i<n;i++){
+                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                }
+                request.setAttribute("mapUsers", mapUsers);
+                List<Role> newListRoles = roleFacade.findAll();
+                request.setAttribute("listRoles", newListRoles);
+                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
+                        .forward(request, response);
+                break;
+            default:
+                request.setAttribute("info", "Нет такой станицы!");
+                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                break;
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -160,3 +155,4 @@ public class AdminController extends HttpServlet {
     }// </editor-fold>
 
 }
+  
