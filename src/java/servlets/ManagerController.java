@@ -84,7 +84,7 @@ public class ManagerController extends HttpServlet {
                 Book book = new Book(nameBook, author, new Integer(yearPublished), isbn, new Integer(countStr));
                 bookFacade.create(book);
                 request.setAttribute("book", book);
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                request.getRequestDispatcher("/welcome").forward(request, response);
                     break;
                 }
             case "/showUsers":

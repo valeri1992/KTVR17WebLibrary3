@@ -31,7 +31,7 @@ public class SecureLogic {
     
     public void addRoleToUser(UserRoles ur){
         this.deleteRoleToUser(ur.getUser());
-        if(ur.getRole().getName().equals("ADMIN")){
+        if(ur.getRole().getName().equals("DIRECTOR")){
             userRolesFacade.create(ur);
             Role addNewRole = roleFacade.findRoleByName("MANAGER");
             UserRoles addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
@@ -75,6 +75,11 @@ public class SecureLogic {
         int n = listUserRoles.size();
         for(int i = 0; i<n; i++){
             if("ADMIN".equals(listUserRoles.get(i).getRole().getName())){
+                return listUserRoles.get(i).getRole().getName();
+            }
+        }
+        for(int i = 0; i<n; i++){
+            if("DIRECTOR".equals(listUserRoles.get(i).getRole().getName())){
                 return listUserRoles.get(i).getRole().getName();
             }
         }

@@ -55,6 +55,10 @@ public class SecureController extends HttpServlet {
             UserRoles ur = new UserRoles();
             ur.setUser(user);
             ur.setRole(role);
+            role.setName("DIRECTOR");
+            roleFacade.create(role);
+            ur.setUser(user);
+            ur.setRole(role);
             userRolesFacade.create(ur);
             role.setName("MANAGER");
             roleFacade.create(role);

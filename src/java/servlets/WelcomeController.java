@@ -51,9 +51,15 @@ public class WelcomeController extends HttpServlet {
                     .forward(request, response);
             return;
         }
-        if(sl.isRole(regUser, "ADMIN")){
+         if(sl.isRole(regUser, "ADMIN")){
             request.setAttribute("info", "Вы вошли как admin");
-            request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
+            request.getRequestDispatcher(PageReturner.getPage("welcomeDirector"))
+                    .forward(request, response);
+            return;
+        }
+         else if(sl.isRole(regUser, "DIRECTOR")){
+            request.setAttribute("info", "Вы вошли как director");
+            request.getRequestDispatcher(PageReturner.getPage("welcomeDirector"))
                     .forward(request, response);
             return;
         }else if(sl.isRole(regUser, "MANAGER")){

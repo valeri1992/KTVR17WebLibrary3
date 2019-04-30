@@ -24,12 +24,12 @@ import util.PageReturner;
  *
  * @author pupil
  */
-@WebServlet(name = "AdminController", urlPatterns = {
+@WebServlet(name = "DirectorController", urlPatterns = {
     "/showUserRoles",
     "/changeUserRole",
-    "/showChangePassword",
+    
 })
-public class AdminController extends HttpServlet {
+public class DirectorController extends HttpServlet {
     @EJB UserFacade userFacade;
     @EJB RoleFacade roleFacade;
     /**
@@ -61,7 +61,7 @@ public class AdminController extends HttpServlet {
                     .forward(request, response);
             return;
         }
-        if(!sl.isRole(regUser, "ADMIN")){
+        if(!sl.isRole(regUser, "DIRECTOR")){
             request.setAttribute("info", "У вас нет прав доступа к ресурсу");
             request.getRequestDispatcher(PageReturner.getPage("showLogin"))
                     .forward(request, response);
@@ -69,31 +69,9 @@ public class AdminController extends HttpServlet {
         } 
         String path = request.getServletPath();
         switch (path) {
-            
-            case "/showChangePassword":
-                List<User> listUsers= roleFacade.findAll();
-                request.setAttribute("listUser", listUsers);
-                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
-                        .forward(request, response);
-                break;
-                 case "/changePassword":
-                String userId = request.getParameter("userId");
-                String password1 = request.getParameter("password1");
-                String password2  = request.getParameter("password2");
-                if(!password1.equals(password2)){
-                  request.setAttribute("info", "Неправильно введен пароль");
-                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
-                        .forward(request, response);}
-                break;
-                EncriptPass ep =new EncriptPass();
-                String salts =ep.createSalts();
-                String encriptPass =ep.setEncriptPass(password1,salts);
-                User user =userFacade.find(new Long(userId));
-                user.set
-                
             case "/showUserRoles":
                 Map<User,String> mapUsers = new HashMap<>();
-                listUsers = userFacade.findAll();
+                List<User> listUsers = userFacade.findAll();
                 int n = listUsers.size();
                 for(int i=0;i<n;i++){
                     mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
@@ -107,7 +85,7 @@ public class AdminController extends HttpServlet {
             case "/changeUserRole":
                 String setButton = request.getParameter("setButton");
                 String deleteButton = request.getParameter("deleteButton");
-                userId = request.getParameter("user");
+                String userId = request.getParameter("user");
                 String roleId = request.getParameter("role");
                 User user = userFacade.find(new Long(userId));
                 Role roleToUser = roleFacade.find(new Long(roleId));
