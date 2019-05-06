@@ -12,7 +12,8 @@
         <a href="showUsers">Список читателей</a><br>
         <a href="showTakeBooks">Список выданных книг</a>
         <a href="showTakeBookToReader">Выдать книгу</a><br>
-        <a href="showUserRoles">Назначение ролей пользователям</a>
+        <a href="showUserRoles">Назначить роль пользователю</a>
+        <a href="showChangePassword">Назначение нового пароля</a>
         <br><br>
        
  </div>       

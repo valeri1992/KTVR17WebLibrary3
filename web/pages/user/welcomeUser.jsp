@@ -6,5 +6,6 @@
         <br>
         <a href="logout">Выйти из системы</a><br>
         <a href="showBooks">Список книг</a><br>
+        <a href="welcome">Главная страница</a>
  </div>       
    

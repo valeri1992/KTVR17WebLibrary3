@@ -14,10 +14,17 @@
     </head>
     <body>
         <h1>Назначить новый  пароль</h1>
+        <p>${info}<p>
         <form action="changePassword" method="POST">
             <select name="userId">
-                <c:forEach var="user" items="${listUsers}"
+                <c:forEach var="user" items="${listUsers}">
+                <option value="${user.id}">${user.name} ${user.surname}.Login ${user.login}</option>    
+                </c:forEach>
             </select>
+            <input type="text" name="newpassword" value="">
+             <input type="submit"  value="Изменить">
         </form>
     </body>
 </html>
+ <td>
+                    

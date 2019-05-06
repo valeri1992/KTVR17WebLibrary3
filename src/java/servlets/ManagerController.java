@@ -148,8 +148,8 @@ public class ManagerController extends HttpServlet {
                     break;
                 }
             default:
-                request.setAttribute("info", "Нет такой станицы!");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                request.setAttribute("info", "Нет такой стpаницы!");
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
         }
     }

@@ -2,10 +2,7 @@ package servlets;
 
 import entity.User;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import secure.Role;
 import secure.SecureLogic;
-import secure.UserRoles;
 import session.RoleFacade;
 import session.UserFacade;
+import util.EncriptPass;
 import util.PageReturner;
 
 /**
@@ -25,8 +21,8 @@ import util.PageReturner;
  * @author pupil
  */
 @WebServlet(name = "AdminController", urlPatterns = {
-    "/showUserRoles",
-    "/changeUserRole",
+   "/changePassword",
+    
     "/showChangePassword",
 })
 public class AdminController extends HttpServlet {
@@ -71,70 +67,59 @@ public class AdminController extends HttpServlet {
         switch (path) {
             
             case "/showChangePassword":
-                List<User> listUsers= roleFacade.findAll();
-                request.setAttribute("listUser", listUsers);
-                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
+               List<User> listUsers= userFacade.findAll();
+               request.setAttribute("listUser", listUsers);
+               request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
                         .forward(request, response);
                 break;
-                 case "/changePassword":
-                String userId = request.getParameter("userId");
-                String password1 = request.getParameter("password1");
-                String password2  = request.getParameter("password2");
-                if(!password1.equals(password2)){
-                  request.setAttribute("info", "Неправильно введен пароль");
-                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
-                        .forward(request, response);}
-                break;
-                EncriptPass ep =new EncriptPass();
-                String salts =ep.createSalts();
-                String encriptPass =ep.setEncriptPass(password1,salts);
-                User user =userFacade.find(new Long(userId));
-                user.set
+//                 case "/changePassword":
+//                String userId = request.getParameter("userId");
+//                String password1 = request.getParameter("password1");
+//                String password2  = request.getParameter("password2");
+//                if(!password1.equals(password2)){
+//                  request.setAttribute("info", "Неправильно введен пароль");
+//                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
+//                        .forward(request, response);}
+//                break;
+//                EncriptPass ep =new EncriptPass();
+//                String salts =ep.createSalts();
+//                String encriptPass =ep.setEncriptPass(password1,salts);
+//                User user =userFacade.find(new Long(userId));
+//                user.set
+//                 case "/changePassword":
+//                String userId = request.getParameter("userId");
+//                String password1 = request.getParameter("password1");
+//                String password2  = request.getParameter("password2");
+//                if(!password1.equals(password2)){
+//                  request.setAttribute("info", "Неправильно введен пароль");
+//                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
+//                        .forward(request, response);}
+//                break;
+//                EncriptPass ep =new EncriptPass();
+//                String salts =ep.createSalts();
+//                String encriptPass =ep.setEncriptPass(password1,salts);
+//                User user =userFacade.find(new Long(userId));
+//                user.set
                 
-            case "/showUserRoles":
-                Map<User,String> mapUsers = new HashMap<>();
-                listUsers = userFacade.findAll();
-                int n = listUsers.size();
-                for(int i=0;i<n;i++){
-                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-                }
-                List<Role> listRoles = roleFacade.findAll();
-                request.setAttribute("mapUsers", mapUsers);
-                request.setAttribute("listRoles", listRoles);
-                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
+            case "/changePassword":
+                 String userId = request.getParameter("user");
+               String newpassword = request.getParameter("newpassword");
+               User user = userFacade.find(new Long(userId));
+             
+      
+               EncriptPass ep= new EncriptPass();
+               String  salts = ep.createSalts();
+               String encriptPass = ep.setEncriptPass(newpassword, salts);
+               user.setPassword(newpassword);
+               userFacade.edit(user);
+               request.setAttribute("info", "Пароль изменен!");
+               listUsers =userFacade.findAll();
+               request.setAttribute("listUsers", listUsers);
+               request.getRequestDispatcher(PageReturner.getPage("changePassword"))
                         .forward(request, response);
                 break;
-            case "/changeUserRole":
-                String setButton = request.getParameter("setButton");
-                String deleteButton = request.getParameter("deleteButton");
-                userId = request.getParameter("user");
-                String roleId = request.getParameter("role");
-                User user = userFacade.find(new Long(userId));
-                Role roleToUser = roleFacade.find(new Long(roleId));
-                UserRoles ur = new UserRoles(user, roleToUser);
-                if(setButton != null){
-                    sl.addRoleToUser(ur);
-                }
-                if(deleteButton != null){
-                    sl.deleteRoleToUser(ur.getUser());
-                }
-                mapUsers = new HashMap<>();
-                listUsers = userFacade.findAll();   
-                n = listUsers.size();
-                for(int i=0;i<n;i++){
-                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-                }
-                request.setAttribute("mapUsers", mapUsers);
-                List<Role> newListRoles = roleFacade.findAll();
-                request.setAttribute("listRoles", newListRoles);
-                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
-                        .forward(request, response);
-                break;
-            default:
-                request.setAttribute("info", "Нет такой станицы!");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
-                break;
-        }
+
+    }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

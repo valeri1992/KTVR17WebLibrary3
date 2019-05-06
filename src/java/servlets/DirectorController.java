@@ -2,7 +2,6 @@ package servlets;
 
 import entity.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,9 +73,16 @@ public class DirectorController extends HttpServlet {
                 List<User> listUsers = userFacade.findAll();
                 int n = listUsers.size();
                 for(int i=0;i<n;i++){
-                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                    if(!"ADMIN".equals(sl.getRole(listUsers.get(i)))){
+                        mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                    }
                 }
                 List<Role> listRoles = roleFacade.findAll();
+                for(int i=0;i<listRoles.size();i++){
+                    if("ADMIN".equals(listRoles.get(i).getName())){
+                        listRoles.remove(i);
+                    }
+                    }
                 request.setAttribute("mapUsers", mapUsers);
                 request.setAttribute("listRoles", listRoles);
                 request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
@@ -88,24 +94,25 @@ public class DirectorController extends HttpServlet {
                 String userId = request.getParameter("user");
                 String roleId = request.getParameter("role");
                 User user = userFacade.find(new Long(userId));
-                Role roleToUser = roleFacade.find(new Long(roleId));
+               
+                if(roleId !=null){
+                     Role roleToUser = roleFacade.find(new Long(roleId));
+             
+              if(!"ADMIN".equals(roleToUser.getName())){
+                   request.getRequestDispatcher("/showUserRoles")
+                        .forward(request, response);
+                break;
+                   }  
                 UserRoles ur = new UserRoles(user, roleToUser);
                 if(setButton != null){
                     sl.addRoleToUser(ur);
                 }
+                }
                 if(deleteButton != null){
-                    sl.deleteRoleToUser(ur.getUser());
+                    sl.deleteRoleToUser(user);
                 }
-                mapUsers = new HashMap<>();
-                listUsers = userFacade.findAll();   
-                n = listUsers.size();
-                for(int i=0;i<n;i++){
-                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-                }
-                request.setAttribute("mapUsers", mapUsers);
-                List<Role> newListRoles = roleFacade.findAll();
-                request.setAttribute("listRoles", newListRoles);
-                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
+              
+                request.getRequestDispatcher("/showUserRoles")
                         .forward(request, response);
                 break;
             default:
@@ -114,7 +121,7 @@ public class DirectorController extends HttpServlet {
                 break;
         }
     }
-
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

@@ -6,9 +6,9 @@
         <p>${info}</p>
         <br>
         <a href="logout">Выйти из системы</a><br>
-        <a href="newUser">добавить читателя</a><br>
+        <a href="newUser">Добавить читателя</a><br>
         <a href="showBooks">Список книг</a><br>
-        <a href="newBook">добавить книгу</a><br>
+        <a href="newBook">Добавить книгу</a><br>
         <a href="showUsers">Список читателей</a><br>
         <a href="showTakeBooks">Список выданных книг</a>
         <a href="showTakeBookToReader">Выдать книгу</a><br>
