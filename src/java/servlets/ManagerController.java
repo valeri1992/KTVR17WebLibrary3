@@ -1,6 +1,7 @@
 package servlets;
 
 import entity.Book;
+import entity.Cover;
 import entity.History;
 import entity.User;
 import java.io.IOException;
@@ -14,8 +15,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import secure.BookCover;
 import secure.SecureLogic;
+import session.BookCoverFacade;
 import session.BookFacade;
+import session.CoverFacade;
 import session.HistoryFacade;
 import session.RoleFacade;
 import session.UserFacade;
@@ -43,7 +47,8 @@ public class ManagerController extends HttpServlet {
 @EJB UserFacade userFacade;
 @EJB HistoryFacade historyFacade;
 @EJB RoleFacade roleFacade;
-    
+  @EJB CoverFacade coverFacade;
+@EJB BookCoverFacade bookCoverFacade;  
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -82,7 +87,11 @@ public class ManagerController extends HttpServlet {
                 String isbn = request.getParameter("isbn");
                 String countStr = request.getParameter("count");
                 Book book = new Book(nameBook, author, new Integer(yearPublished), isbn, new Integer(countStr));
+                String coverId=request.getParameter("coverId");
+                Cover cover=coverFacade.find(new Long (coverId));
                 bookFacade.create(book);
+                BookCover bookCover = new BookCover (book,cover);
+                bookCoverFacade.create(bookCover);
                 request.setAttribute("book", book);
                 request.getRequestDispatcher("/welcome").forward(request, response);
                     break;

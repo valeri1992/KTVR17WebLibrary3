@@ -14,7 +14,7 @@
         <ul>
             <c:forEach var="book" items="${listBooks}">
                 <li>
-                    ${book.nameBook} ${book.author} 
+                    <a href="showBook?bookId=${book.id}">${book.nameBook} ${book.author}</a> 
                     <c:if test="${role == 'MANAGER'}">
                         <a href="deleteBook?deleteBookId=${book.id}">Удалить книгу</a>
                     </c:if>

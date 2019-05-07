@@ -26,6 +26,11 @@
              Количество экземпрляров:<br>
             <input type="text" id="count" name="count"><br>
             <br>
+            <select name="coverId">
+                <c:forEach var="cover" items="${listCovers}" >
+                    <option value="${cover.id}">$cover.name</option>
+                </c:forEach>
+            <br>
             <input type="submit" value="Добавить">
         </form><br>
       </div>   

@@ -1,6 +1,6 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<link rel="stylesheet" href="css/welcome.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/welcome.css">
 <div class="colorBack">
         <h1>Добро пожаловать в нашу библиотеку</h1>
         <p>${info}</p>
