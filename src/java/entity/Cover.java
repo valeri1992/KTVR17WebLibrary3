@@ -14,23 +14,23 @@ import javax.persistence.Id;
 
 /**
  *
- * @author pupil
+ * @author Melnikov
  */
 @Entity
 public class Cover implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String Description;
+    private String description;
 
     public Cover() {
     }
 
-    public Cover(String name, String fileName) {
-       
+    public Cover(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     public Long getId() {
@@ -50,16 +50,19 @@ public class Cover implements Serializable {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
-    public void setDescription(String Description) {
-        this.Description = Description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.id);
+        hash = 47 * hash + Objects.hashCode(this.name);
+        hash = 47 * hash + Objects.hashCode(this.description);
         return hash;
     }
 
@@ -78,7 +81,7 @@ public class Cover implements Serializable {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.Description, other.Description)) {
+        if (!Objects.equals(this.description, other.description)) {
             return false;
         }
         if (!Objects.equals(this.id, other.id)) {
@@ -89,7 +92,10 @@ public class Cover implements Serializable {
 
     @Override
     public String toString() {
-        return "Cover{" + "id=" + id + ", name=" + name + ", Description=" + Description + '}';
+        return "Cover{" + "id=" + id 
+                + ", name=" + name 
+                + ", description=" + description 
+                + '}';
     }
-
+   
 }

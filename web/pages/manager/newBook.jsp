@@ -14,6 +14,7 @@
       <div class="colorBack">
            <a href="welcome">Главная страница</a>
         <h1>Добавляем в библиотеку новую книгу</h1>
+        <a href="showUploadFile">Загрузить изображение обложки</a>
         <form action="addBook" method="POST" name="form1" onsubmit="return validate();" id="form1">
              Название:<br>
             <input type="text" id="nameBook" name="nameBook"><br>
@@ -27,11 +28,13 @@
             <input type="text" id="count" name="count"><br>
             <br>
             <select name="coverId">
-                <c:forEach var="cover" items="${listCovers}" >
-                    <option value="${cover.id}">$cover.name</option>
+                <c:forEach var="cover" items="${listCovers}">
+                    <option value="${cover.id}">${cover.description}</option>
                 </c:forEach>
+            </select>
             <br>
             <input type="submit" value="Добавить">
+            
         </form><br>
       </div>   
         <script src="${pageContext.request.contextPath}/js/newBook.js"></script>

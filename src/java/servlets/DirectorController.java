@@ -19,10 +19,7 @@ import session.RoleFacade;
 import session.UserFacade;
 import util.PageReturner;
 
-/**
- *
- * @author pupil
- */
+
 @WebServlet(name = "DirectorController", urlPatterns = {
     "/showUserRoles",
     "/changeUserRole",
@@ -82,7 +79,7 @@ public class DirectorController extends HttpServlet {
                     if("ADMIN".equals(listRoles.get(i).getName())){
                         listRoles.remove(i);
                     }
-                    }
+                }
                 request.setAttribute("mapUsers", mapUsers);
                 request.setAttribute("listRoles", listRoles);
                 request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
@@ -94,34 +91,30 @@ public class DirectorController extends HttpServlet {
                 String userId = request.getParameter("user");
                 String roleId = request.getParameter("role");
                 User user = userFacade.find(new Long(userId));
-               
-                if(roleId !=null){
-                     Role roleToUser = roleFacade.find(new Long(roleId));
-             
-              if(!"ADMIN".equals(roleToUser.getName())){
-                   request.getRequestDispatcher("/showUserRoles")
-                        .forward(request, response);
-                break;
-                   }  
-                UserRoles ur = new UserRoles(user, roleToUser);
-                if(setButton != null){
-                    sl.addRoleToUser(ur);
-                }
+                if(roleId != null){
+                    Role roleToUser = roleFacade.find(new Long(roleId));
+                    if("ADMIN".equals(roleToUser.getName())){
+                        request.getRequestDispatcher("/showUserRoles").forward(request, response);
+                        break;
+                    }
+                    UserRoles ur = new UserRoles(user, roleToUser);
+                    if(setButton != null){
+                        sl.addRoleToUser(ur);
+                    }
                 }
                 if(deleteButton != null){
                     sl.deleteRoleToUser(user);
                 }
-              
                 request.getRequestDispatcher("/showUserRoles")
                         .forward(request, response);
                 break;
             default:
                 request.setAttribute("info", "Нет такой станицы!");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
         }
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -162,4 +155,3 @@ public class DirectorController extends HttpServlet {
     }// </editor-fold>
 
 }
-  

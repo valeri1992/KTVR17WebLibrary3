@@ -6,15 +6,12 @@
 package session;
 
 import entity.Book;
+import entity.BookCover;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import secure.BookCover;
 
-/**
- *
- * @author pupil
- */
+
 @Stateless
 public class BookCoverFacade extends AbstractFacade<BookCover> {
 

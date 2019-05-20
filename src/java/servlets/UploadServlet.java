@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -21,29 +20,26 @@ import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import static jdk.nashorn.internal.objects.NativeError.getFileName;
 import org.imgscalr.Scalr;
 import secure.SecureLogic;
-import session.BookFacade;
 import session.CoverFacade;
 import util.PageReturner;
 
-/**
- *
- * @author pupil
- */
 
 
-@WebServlet(name = "UploadServlet", urlPatterns = {"/UploadFile"})
+@WebServlet(name = "UploadServlet", urlPatterns = {
+    "/uploadFile"
+})
+@MultipartConfig()
 public class UploadServlet extends HttpServlet {
-       @EJB CoverFacade coverFacade;
-
+    @EJB CoverFacade coverFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -55,7 +51,7 @@ public class UploadServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-               response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         SecureLogic sl = new SecureLogic();
         HttpSession session = request.getSession(false);
@@ -68,8 +64,7 @@ public class UploadServlet extends HttpServlet {
             request.setAttribute("info", "Войдите!");
             request.getRequestDispatcher("/showLogin").forward(request, response);
         }
-       
-        if(!sl.isRole( regUser,"MANAGER")){
+        if(!sl.isRole(regUser, "MANAGER")){
             request.setAttribute("info", "Вы должны быть менеджером!");
             request.getRequestDispatcher("/showLogin").forward(request, response);
         }
@@ -93,11 +88,11 @@ public class UploadServlet extends HttpServlet {
                writeToFile(resize(tempFile),path);
                tempFile.delete();
             }
-            String name = request.getParameter("description");
-            Cover cover = new Cover(name, getFileName(filePart));
+            String description = request.getParameter("description");
+            Cover cover = new Cover(getFileName(filePart),description);
             coverFacade.create(cover);
         }        
-        request.getRequestDispatcher("/showAddNewBook").forward(request, response);
+        request.getRequestDispatcher("/newBook").forward(request, response);
     }
     private String getFileName(final Part part){
         final String partHeader = part.getHeader("content-disposition");
@@ -110,14 +105,13 @@ public class UploadServlet extends HttpServlet {
             }
         }
         return null;
-    
     }
-     public void writeToFile(byte[] data, String fileName) throws IOException{
+    public void writeToFile(byte[] data, String fileName) throws IOException{
         try (FileOutputStream out = new FileOutputStream(fileName)) {
             out.write(data);
         }
     }
-     public static byte[] resize(File icon) {
+    public byte[] resize(File icon) {
         try {
            BufferedImage originalImage = ImageIO.read(icon);
            originalImage= Scalr.resize(originalImage, Scalr.Method.QUALITY, Scalr.Mode.FIT_TO_WIDTH,400);
@@ -133,7 +127,6 @@ public class UploadServlet extends HttpServlet {
             return null;
         }
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

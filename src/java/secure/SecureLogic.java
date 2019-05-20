@@ -42,12 +42,13 @@ public class SecureLogic {
             addNewRole = roleFacade.findRoleByName("USER");
             addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
             userRolesFacade.create(addedNewRoles);
-        } if(ur.getRole().getName().equals("DIRECTOR")){
+        }if(ur.getRole().getName().equals("DIRECTOR")){
             userRolesFacade.create(ur);
             Role addNewRole = roleFacade.findRoleByName("MANAGER");
             UserRoles addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
-            addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
+            userRolesFacade.create(addedNewRoles);
             addNewRole = roleFacade.findRoleByName("USER");
+            addedNewRoles = new UserRoles(ur.getUser(),addNewRole);
             userRolesFacade.create(addedNewRoles);
         }if(ur.getRole().getName().equals("MANAGER")){
             userRolesFacade.create(ur);

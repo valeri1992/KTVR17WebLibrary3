@@ -1,10 +1,11 @@
 package servlets;
 
 import entity.User;
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,6 +42,30 @@ public class SecureController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        File imagesFolder = new File(PageReturner.getPage("imagesFolder"));
+        if(!imagesFolder.exists()){
+            try {
+                imagesFolder.mkdir();
+            } catch (Exception e) {
+                Logger.getLogger(SecureController.class.getName()).log(
+                        Level.SEVERE, 
+                        "Не существует директории для хранения изображений!",
+                        e
+                );
+            }
+        }
+        File tmp = new File(PageReturner.getPage("tmp"));
+        if(!tmp.exists()){
+            try {
+                tmp.mkdir();
+            } catch (Exception e) {
+                Logger.getLogger(SecureController.class.getName()).log(
+                        Level.SEVERE, 
+                        "Не существует директории для временных файлов!", 
+                        e
+                );
+            }
+        }
         List<User> listUsers = userFacade.findAll();
         if(listUsers.isEmpty()){
             EncriptPass ep = new EncriptPass();
@@ -55,6 +80,7 @@ public class SecureController extends HttpServlet {
             UserRoles ur = new UserRoles();
             ur.setUser(user);
             ur.setRole(role);
+            userRolesFacade.create(ur);
             role.setName("DIRECTOR");
             roleFacade.create(role);
             ur.setUser(user);
@@ -120,8 +146,7 @@ public class SecureController extends HttpServlet {
                     session.setAttribute("regUser", regUser);
                     request.setAttribute("info", "Привет "+regUser.getName()
                             +"! Вы вошли в систему.");
-                    request.getRequestDispatcher("/welcome")
-                            .forward(request, response);
+                    request.getRequestDispatcher("/welcome").forward(request, response);
                     break;
                 }
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))
@@ -167,12 +192,11 @@ public class SecureController extends HttpServlet {
                 session = request.getSession(true);
                 session.setAttribute("regUser", user);
                 request.setAttribute("user", user);
-                request.getRequestDispatcher("/welcome")
-                        .forward(request, response);
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
              default:
-                request.setAttribute("info", "Нет такой станицы!");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                request.setAttribute("info", "Нет такой стpаницы!");
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
             
         }

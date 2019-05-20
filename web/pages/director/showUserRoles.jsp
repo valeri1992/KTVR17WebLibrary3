@@ -4,7 +4,6 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/welcome.css">
         <title>JSP Page</title>
     </head>
     <body>

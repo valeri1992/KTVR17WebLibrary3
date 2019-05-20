@@ -1,0 +1,23 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 20-May-2019, 12:53:02
+    Author     : agloi
+*/
+h1{
+    color:red;
+}
+.invalid{
+    border: 1px solid #f60;
+}
+.colorBack{
+    background-color: azure;
+}
+.coverImg{
+    width: 200px;
+    height: 250px;
+}
+

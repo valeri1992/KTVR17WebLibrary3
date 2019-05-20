@@ -2,7 +2,6 @@ package servlets;
 
 import entity.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +13,7 @@ import util.PageReturner;
 
 /**
  *
- * @author pupil
+ * @author Melnikov
  */
 @WebServlet(name = "WelcomeController", urlPatterns = {
     "/welcome",
@@ -51,14 +50,13 @@ public class WelcomeController extends HttpServlet {
                     .forward(request, response);
             return;
         }
-         if(sl.isRole(regUser, "ADMIN")){
+        if(sl.isRole(regUser, "ADMIN")){
             request.setAttribute("info", "Вы вошли как admin");
-            request.getRequestDispatcher(PageReturner.getPage("welcomeDirector"))
+            request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
                     .forward(request, response);
             return;
-        }
-         else if(sl.isRole(regUser, "DIRECTOR")){
-            request.setAttribute("info", "Вы вошли как director");
+        }else if(sl.isRole(regUser, "DIRECTOR")){
+            request.setAttribute("info", "Вы вошли как директор");
             request.getRequestDispatcher(PageReturner.getPage("welcomeDirector"))
                     .forward(request, response);
             return;

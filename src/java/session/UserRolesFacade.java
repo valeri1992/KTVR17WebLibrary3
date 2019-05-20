@@ -7,10 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import secure.UserRoles;
 
-/**
- *
- * @author Melnikov
- */
 @Stateless
 public class UserRolesFacade extends AbstractFacade<UserRoles> {
 
@@ -27,9 +23,14 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
     }
 
     public List<UserRoles> findByUser(User user) {
-        return em.createQuery("SELECT ur FROM UserRoles ur WHERE ur.user = :user")
+        try {
+            return em.createQuery("SELECT ur FROM UserRoles ur WHERE ur.user = :user")
                 .setParameter("user", user)
                 .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+        
     }
 
    

@@ -16,14 +16,11 @@ import session.UserFacade;
 import util.EncriptPass;
 import util.PageReturner;
 
-/**
- *
- * @author pupil
- */
+
 @WebServlet(name = "AdminController", urlPatterns = {
-   "/changePassword",
-    
     "/showChangePassword",
+    "/changePassword",
+    
 })
 public class AdminController extends HttpServlet {
     @EJB UserFacade userFacade;
@@ -65,61 +62,30 @@ public class AdminController extends HttpServlet {
         } 
         String path = request.getServletPath();
         switch (path) {
-            
             case "/showChangePassword":
-               List<User> listUsers= userFacade.findAll();
-               request.setAttribute("listUser", listUsers);
-               request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
+                List<User> listUsers = userFacade.findAll();
+                request.setAttribute("listUsers", listUsers);
+                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
                         .forward(request, response);
                 break;
-//                 case "/changePassword":
-//                String userId = request.getParameter("userId");
-//                String password1 = request.getParameter("password1");
-//                String password2  = request.getParameter("password2");
-//                if(!password1.equals(password2)){
-//                  request.setAttribute("info", "Неправильно введен пароль");
-//                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
-//                        .forward(request, response);}
-//                break;
-//                EncriptPass ep =new EncriptPass();
-//                String salts =ep.createSalts();
-//                String encriptPass =ep.setEncriptPass(password1,salts);
-//                User user =userFacade.find(new Long(userId));
-//                user.set
-//                 case "/changePassword":
-//                String userId = request.getParameter("userId");
-//                String password1 = request.getParameter("password1");
-//                String password2  = request.getParameter("password2");
-//                if(!password1.equals(password2)){
-//                  request.setAttribute("info", "Неправильно введен пароль");
-//                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
-//                        .forward(request, response);}
-//                break;
-//                EncriptPass ep =new EncriptPass();
-//                String salts =ep.createSalts();
-//                String encriptPass =ep.setEncriptPass(password1,salts);
-//                User user =userFacade.find(new Long(userId));
-//                user.set
-                
             case "/changePassword":
-                 String userId = request.getParameter("user");
-               String newpassword = request.getParameter("newpassword");
-               User user = userFacade.find(new Long(userId));
-             
-      
-               EncriptPass ep= new EncriptPass();
-               String  salts = ep.createSalts();
-               String encriptPass = ep.setEncriptPass(newpassword, salts);
-               user.setPassword(newpassword);
-               userFacade.edit(user);
-               request.setAttribute("info", "Пароль изменен!");
-               listUsers =userFacade.findAll();
-               request.setAttribute("listUsers", listUsers);
-               request.getRequestDispatcher(PageReturner.getPage("changePassword"))
+                String userId = request.getParameter("userId");
+                String newpassword = request.getParameter("newpassword");
+                User user = userFacade.find(new Long(userId));
+                EncriptPass ep = new EncriptPass();
+                String salts = ep.createSalts();
+                String encriptPass = ep.setEncriptPass(newpassword, salts);
+                user.setPassword(encriptPass);
+                user.setSalts(salts);
+                userFacade.edit(user);
+                request.setAttribute("info", "Пароль изменен!");
+                listUsers = userFacade.findAll();
+                request.setAttribute("listUsers", listUsers);
+                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
                         .forward(request, response);
                 break;
-
-    }
+            
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -162,4 +128,3 @@ public class AdminController extends HttpServlet {
     }// </editor-fold>
 
 }
-  
